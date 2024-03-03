@@ -1,5 +1,6 @@
 package com.example.bankoperationservice.controller;
 
+import com.example.bankoperationservice.dto.DTO;
 import com.example.bankoperationservice.model.Contact;
 import com.example.bankoperationservice.model.UserData;
 import com.example.bankoperationservice.service.SearchingService;
@@ -22,25 +23,25 @@ public class SearchingController {
     private SearchingService searchingService;
 
     @GetMapping("/by-date")
-    public ResponseEntity<List<UserData>> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<UserData> foundedUsers = searchingService.searchByDate(date);
+    public ResponseEntity<List<DTO>> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<DTO> foundedUsers = searchingService.searchByDate(date);
         return ResponseEntity.ok(foundedUsers);
     }
 
     @GetMapping("/by-phone")
-    public ResponseEntity<Contact> getAllByPhone(@RequestParam String phone) {
-        Contact foundedContact = searchingService.searchByPhone(phone);
+    public ResponseEntity<DTO> getAllByPhone(@RequestParam String phone) {
+        DTO foundedContact = searchingService.searchByPhone(phone);
         return ResponseEntity.ok(foundedContact);
     }
 
     @GetMapping("/by-name")
-    public ResponseEntity<List<UserData>> getAllByName(@RequestParam String name) {
-        List<UserData> foundedUsers = searchingService.searchByName(name);
+    public ResponseEntity<List<DTO>> getAllByName(@RequestParam String name) {
+        List<DTO> foundedUsers = searchingService.searchByName(name);
         return ResponseEntity.ok(foundedUsers);
     }
     @GetMapping("/by-email")
-    public ResponseEntity<Contact> getAllByEmail(@RequestParam String email) {
-        Contact foundedUsers = searchingService.searchByEmail(email);
+    public ResponseEntity<DTO> getAllByEmail(@RequestParam String email) {
+        DTO foundedUsers = searchingService.searchByEmail(email);
         return ResponseEntity.ok(foundedUsers);
     }
 }
