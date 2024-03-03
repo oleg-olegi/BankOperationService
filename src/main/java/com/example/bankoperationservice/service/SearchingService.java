@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -47,6 +48,11 @@ public class SearchingService {
     public DTO searchByEmail(String email) {
         Contact contacts = contactRepository.findByEmail(email);
         return new DTO(contacts.getId(), contacts.getUserData().getFullName(), contacts.getUserData().getDateOfBirth());
+    }
+
+    public List<UserData> getAll(Integer page, Integer size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return userRepository.findAll(pageRequest).getContent();
     }
 }
 

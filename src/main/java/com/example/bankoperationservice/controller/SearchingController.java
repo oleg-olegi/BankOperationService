@@ -22,6 +22,12 @@ public class SearchingController {
     private final static Logger logger = LoggerFactory.getLogger(SearchingController.class);
     private SearchingService searchingService;
 
+    @GetMapping
+    public ResponseEntity<List<UserData>> getAllUsers(@RequestParam("page") Integer page,
+                                                 @RequestParam("size") Integer size) {
+        return ResponseEntity.ok(searchingService.getAll(page, size));
+    }
+
     @GetMapping("/by-date")
     public ResponseEntity<List<DTO>> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<DTO> foundedUsers = searchingService.searchByDate(date);
@@ -39,6 +45,7 @@ public class SearchingController {
         List<DTO> foundedUsers = searchingService.searchByName(name);
         return ResponseEntity.ok(foundedUsers);
     }
+
     @GetMapping("/by-email")
     public ResponseEntity<DTO> getAllByEmail(@RequestParam String email) {
         DTO foundedUsers = searchingService.searchByEmail(email);
