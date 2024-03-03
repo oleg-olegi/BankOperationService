@@ -4,8 +4,6 @@ package com.example.bankoperationservice.service;
 import com.example.bankoperationservice.model.BankAccount;
 import com.example.bankoperationservice.model.Contact;
 import com.example.bankoperationservice.model.UserData;
-import com.example.bankoperationservice.repository.IBankAccountRepository;
-import com.example.bankoperationservice.repository.IContactRepository;
 import com.example.bankoperationservice.repository.IUserRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
