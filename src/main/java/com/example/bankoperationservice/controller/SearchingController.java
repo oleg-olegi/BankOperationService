@@ -1,7 +1,6 @@
 package com.example.bankoperationservice.controller;
 
 import com.example.bankoperationservice.dto.DTO;
-import com.example.bankoperationservice.model.Contact;
 import com.example.bankoperationservice.model.UserData;
 import com.example.bankoperationservice.service.SearchingService;
 import lombok.AllArgsConstructor;
