@@ -25,4 +25,12 @@
 Перейдите в корневую директорию проекта и выполните: 
 ```bash
 mvn clean install
+
+## Запуск
+
+После успешной сборки приложения выполните:
+
+```bash
+Copy code
+java -jar target/BankOperationService.jar
  
