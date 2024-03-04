@@ -1,0 +1,1 @@
+Стек: Java 17 Spring Boot 3 База данных PostgreSQL Maven REST API
