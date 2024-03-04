@@ -13,8 +13,7 @@
 
 1. **Клонирование репозитория:**
 
-   ```bash
-   git clone https://github.com/oleg-olegi/BankOperationService 
+```git clone https://github.com/oleg-olegi/BankOperationService 
 ```
 
 2. **Создание базы данных:**
