@@ -1,4 +1,4 @@
-Стек: Java 17 Spring Boot 3 База данных PostgreSQL Maven REST API
+Стек: Java 17 Spring Boot 3 База данных PostgreSQL Maven REST API Swagger 
 # Запуск API на Java с PostgreSQL
 
 Этот проект представляет собой пример простого RESTful API на Java с использованием PostgreSQL в качестве базы данных.
@@ -38,3 +38,9 @@ mvn clean install
 ```
 java -jar target/BankOperationService.jar
  ```
+## Тестирование API:
+
+4. 
+После запуска приложения API будет доступно по адресу `http://localhost:8080`
+Тестирование возможно через Swagger, либо
+ используйте любой HTTP-клиент (например, cURL, Postman) для тестирования эндпоинтов.
