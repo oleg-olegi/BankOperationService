@@ -25,7 +25,7 @@ git clone https://github.com/oleg-olegi/BankOperationService
 
 Перейдите в корневую директорию проекта и выполните: 
 
-```bash
+```
 mvn clean install
 ```
 
@@ -35,7 +35,6 @@ mvn clean install
 
 После успешной сборки приложения выполните:
 
-```bash
-Copy code
+```
 java -jar target/BankOperationService.jar
  ```
