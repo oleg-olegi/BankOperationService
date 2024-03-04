@@ -15,6 +15,7 @@
 
    ```bash
    git clone https://github.com/oleg-olegi/BankOperationService 
+```
 
 2. **Создание базы данных:**
 
@@ -23,8 +24,10 @@
 Сборка проекта:
 
 Перейдите в корневую директорию проекта и выполните: 
+
 ```bash
 mvn clean install
+```
 
 ## Запуск
 
@@ -35,4 +38,4 @@ mvn clean install
 ```bash
 Copy code
 java -jar target/BankOperationService.jar
- 
+ ```
