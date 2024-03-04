@@ -16,3 +16,12 @@
    ```bash
    git clone https://github.com/oleg-olegi/BankOperationService 
 
+2. **Создание базы данных:**
+
+Создайте базу данных PostgreSQL и настройте соединение в файле application.properties.
+
+Сборка проекта:
+
+Перейдите в корневую директорию проекта и выполните: 
+mvn clean install
+ 
