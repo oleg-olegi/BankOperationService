@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class TransferController {
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
     private TransferService transferService;
