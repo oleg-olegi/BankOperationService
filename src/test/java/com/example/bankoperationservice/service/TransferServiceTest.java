@@ -1,58 +1,104 @@
 package com.example.bankoperationservice.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import java.math.BigDecimal;
+import java.util.Optional;
+
+import com.example.bankoperationservice.exceptions.InsufficientFundsException;
 import com.example.bankoperationservice.model.BankAccount;
 import com.example.bankoperationservice.model.UserData;
 import com.example.bankoperationservice.repository.IBankAccountRepository;
 import com.example.bankoperationservice.repository.IUserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.math.BigDecimal;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(MockitoExtension.class)
 public class TransferServiceTest {
-
 
     @Mock
     private IUserRepository userRepository;
 
     @Mock
     private IBankAccountRepository bankRepository;
-
     @InjectMocks
     private TransferService transferService;
 
-
     @BeforeEach
-    void setUp() {
-        UserData sender = new UserData();
-        sender.setId(1L);
-        BankAccount senderBankAccount = new BankAccount();
-        senderBankAccount.setBalance(BigDecimal.valueOf(1000));
-        sender.setBankAccount(senderBankAccount);
-
-        UserData recipient = new UserData();
-        recipient.setId(2L);
-        BankAccount recipientBankAccount = new BankAccount();
-        recipientBankAccount.setBalance(BigDecimal.valueOf(500));
-        recipient.setBankAccount(recipientBankAccount);
+    public void setUp() {
+        transferService = new TransferService(userRepository, bankRepository);
     }
 
     @Test
-    void transferMoney_SenderNotFound() {
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+    public void testTransferMoneySufficientFunds() {
+        Long senderId = 1L;
+        Long recipientId = 2L;
 
-        assertThrows(NoSuchElementException.class, // Здесь ожидается NoSuchElementException, так как findById возвращает Optional
-                () -> transferService.transferMoney(1L, 2L, BigDecimal.valueOf(500)));
-        verify(userRepository, never()).save(any());
+        UserData sender = new UserData();
+        UserData recipient = new UserData();
+
+        sender.setId(senderId);
+        recipient.setId(recipientId);
+
+        BigDecimal senderBalance = BigDecimal.valueOf(200);
+        BigDecimal recipientBalance = BigDecimal.valueOf(300);
+
+        BankAccount senderBankAcc = new BankAccount();
+        senderBankAcc.setBalance(senderBalance);
+        BankAccount recipientBankAcc = new BankAccount();
+        recipientBankAcc.setBalance(recipientBalance);
+
+        sender.setBankAccount(senderBankAcc);
+        recipient.setBankAccount(recipientBankAcc);
+
+        when(userRepository.findById(senderId)).thenReturn(Optional.of(sender));
+        when(userRepository.findById(recipientId)).thenReturn(Optional.of(recipient));
+
+        BigDecimal amount = BigDecimal.valueOf(100);
+
+        transferService.transferMoney(senderId, recipientId, amount);
+
+        assertEquals(BigDecimal.valueOf(100), sender.getBankAccount().getBalance());
+        assertEquals(BigDecimal.valueOf(400), recipient.getBankAccount().getBalance());
+    }
+
+    @Test
+    public void testTransferMoneyInsufficientFunds() {
+        Long senderId = 1L;
+        Long recipientId = 2L;
+
+        UserData sender = new UserData();
+        UserData recipient = new UserData();
+
+        sender.setId(senderId);
+        recipient.setId(recipientId);
+
+        BigDecimal senderBalance = BigDecimal.valueOf(200);
+        BigDecimal recipientBalance = BigDecimal.valueOf(300);
+        BigDecimal amount = BigDecimal.valueOf(300);
+
+        BankAccount senderBankAcc = new BankAccount();
+        senderBankAcc.setBalance(senderBalance);
+        BankAccount recipientBankAcc = new BankAccount();
+        recipientBankAcc.setBalance(recipientBalance);
+
+        sender.setBankAccount(senderBankAcc);
+        recipient.setBankAccount(recipientBankAcc);
+
+        when(userRepository.findById(senderId)).thenReturn(Optional.of(sender));
+        when(userRepository.findById(recipientId)).thenReturn(Optional.of(recipient));
+
+        assertThrows(InsufficientFundsException.class, () -> transferService.transferMoney(senderId, recipientId, amount));
+
+        assertEquals(BigDecimal.valueOf(200), sender.getBankAccount().getBalance());
+        assertEquals(BigDecimal.valueOf(300), recipient.getBankAccount().getBalance());
     }
 }

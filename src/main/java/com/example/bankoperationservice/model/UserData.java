@@ -7,11 +7,13 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
-
+import java.util.Date;
 
 
 @Entity
+@Table(name = "user_data")
 @Data
 @ToString(exclude = {"contacts"})
 @NoArgsConstructor
@@ -24,7 +26,12 @@ public class UserData {
     @Column(nullable = false)
     @NotNull(message = "Full name cannot be null")
     @NotBlank(message = "Full name cannot be blank")
-    private String fullName;
+    private String name;
+
+    @Column(nullable = false)
+    @NotNull(message = "Full name cannot be null")
+    @NotBlank(message = "Full name cannot be blank")
+    private String surname;
 
     @Column(unique = true)
     @NotNull(message = "Login cannot be null")
@@ -35,7 +42,7 @@ public class UserData {
     @Column(nullable = false)
     @NotNull(message = "Password cannot be null")
     @NotBlank(message = "Password cannot be blank")
-    private char[] password;
+    private String password;
 
     @Column(nullable = false)
     @NotNull(message = "Initial balance cannot be null")
@@ -56,6 +63,11 @@ public class UserData {
     @Column(unique = true)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private BankAccount bankAccount;
@@ -64,4 +76,4 @@ public class UserData {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
     private Collection<Contact> contacts;
- }
+}

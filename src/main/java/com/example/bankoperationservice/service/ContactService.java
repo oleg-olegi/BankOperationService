@@ -4,6 +4,7 @@ import com.example.bankoperationservice.model.Contact;
 import com.example.bankoperationservice.repository.IContactRepository;
 import com.example.bankoperationservice.repository.IUserRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class ContactService {
     private final static Logger logger = LoggerFactory.getLogger(ContactService.class);
     private IContactRepository contactRepository;
@@ -79,6 +81,7 @@ public class ContactService {
             }
         });
     }
+
     public void deleteEmail(Long id, String email) {
         List<Contact> foundedEmails = contactRepository.findAllByUserId(id);
         foundedEmails.forEach(contact -> {

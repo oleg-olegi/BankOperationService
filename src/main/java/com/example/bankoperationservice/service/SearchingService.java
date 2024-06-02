@@ -1,6 +1,6 @@
 package com.example.bankoperationservice.service;
 
-import com.example.bankoperationservice.dto.DTO;
+import com.example.bankoperationservice.dto.UserDTO;
 import com.example.bankoperationservice.model.Contact;
 import com.example.bankoperationservice.model.UserData;
 import com.example.bankoperationservice.repository.IContactRepository;
@@ -23,33 +23,42 @@ public class SearchingService {
     private IContactRepository contactRepository;
 
 
-    public List<DTO> searchByDate(LocalDate date) {
+
+    public List<UserDTO> searchByDate(LocalDate date) {
+        logger.info("Searching users by date: {}", date);
         List<UserData> users = userRepository.findAllByDate(date);
-        List<DTO> dtoList = new ArrayList<>();
+        List<UserDTO> dtoList = new ArrayList<>();
         users.forEach(userData -> dtoList
-                .add(new DTO(userData.getId(), userData.getFullName(), userData.getDateOfBirth())));
+                .add(new UserDTO(userData.getId(), userData.getName(), userData.getSurname(),
+                        userData.getDateOfBirth())));
         return dtoList;
     }
 
-
-    public DTO searchByPhone(String phone) {
+    public UserDTO searchByPhone(String phone) {
+        logger.info("Searching user by phone: {}", phone);
         Contact contacts = contactRepository.findByPhone(phone);
-        return new DTO(contacts.getId(), contacts.getUserData().getFullName(), contacts.getUserData().getDateOfBirth());
+        return new UserDTO(contacts.getId(), contacts.getUserData().getName(),
+                contacts.getUserData().getSurname(), contacts.getUserData().getDateOfBirth());
     }
 
-    public List<DTO> searchByName(String name) {
-        List<DTO> dtoList = new ArrayList<>();
+    public List<UserDTO> searchByName(String name) {
+        logger.info("Searching users by name: {}", name);
+        List<UserDTO> dtoList = new ArrayList<>();
         userRepository.findAllByName(name).forEach(userData -> dtoList
-                .add(new DTO(userData.getId(), userData.getFullName(), userData.getDateOfBirth())));
+                .add(new UserDTO(userData.getId(), userData.getName(), userData.getSurname(),
+                        userData.getDateOfBirth())));
         return dtoList;
     }
 
-    public DTO searchByEmail(String email) {
+    public UserDTO searchByEmail(String email) {
+        logger.info("Searching user by email: {}", email);
         Contact contacts = contactRepository.findByEmail(email);
-        return new DTO(contacts.getId(), contacts.getUserData().getFullName(), contacts.getUserData().getDateOfBirth());
+        return new UserDTO(contacts.getId(), contacts.getUserData().getName(),
+                contacts.getUserData().getSurname(), contacts.getUserData().getDateOfBirth());
     }
 
     public List<UserData> getAll(Integer page, Integer size) {
+        logger.info("Getting all users with pagination (page: {}, size: {})", page, size);
         PageRequest pageRequest = PageRequest.of(page, size);
         return userRepository.findAll(pageRequest).getContent();
     }

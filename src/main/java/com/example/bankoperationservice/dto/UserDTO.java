@@ -7,12 +7,14 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+
 @Component
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DTO {
+public class UserDTO {
     private Long id;
-    private String fullName;
+    private String name;
+    private String surname;
     private LocalDate dateOfBirth;
-}
+ }

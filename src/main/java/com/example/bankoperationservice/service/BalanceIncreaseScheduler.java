@@ -24,12 +24,14 @@ public class BalanceIncreaseScheduler {
     public void increaseBalance() {
         try {
             bankAccountRepository.balanceLessThenLimit().forEach(bankAccount -> {
-                BigDecimal currentBalance = bankAccount.getBalance();
-                BigDecimal increaseAmount = currentBalance.multiply(BigDecimal.valueOf(0.05));
-                BigDecimal newBalance = currentBalance.add(increaseAmount);
-                bankAccount.setBalance(newBalance);
-                bankAccountRepository.save(bankAccount);
-                logger.info("Баланс банковского счета успешно увеличен");
+                if (bankAccount.getBalance().compareTo(bankAccount.getStartBalance().multiply(BigDecimal.valueOf(2.07)))>=0) {
+                    BigDecimal currentBalance = bankAccount.getBalance();
+                    BigDecimal increaseAmount = currentBalance.multiply(BigDecimal.valueOf(0.05));
+                    BigDecimal newBalance = currentBalance.add(increaseAmount);
+                    bankAccount.setBalance(newBalance);
+                    bankAccountRepository.save(bankAccount);
+                    logger.info("Баланс банковского счета успешно увеличен");
+                }
             });
         } catch (Exception e) {
             logger.error("Ошибка при увеличении баланса банковских счетов", e);

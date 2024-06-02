@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface IBankAccountRepository extends JpaRepository<BankAccount, Long> {
+public interface IBankAccountRepository extends JpaRepository<BankAccount, String> {
     @Query ("SELECT acc FROM BankAccount acc WHERE acc.balance<(acc.startBalance*2.07)")
     List<BankAccount> balanceLessThenLimit();
 }
