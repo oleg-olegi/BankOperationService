@@ -1,3 +1,6 @@
 logging:
   level:
     org.springframework.security: DEBUG
+jwt:
+  secret: 987bdfb984165b1g3btn1t35n1t1n5rtn5rthn
+  lifetime: 10m

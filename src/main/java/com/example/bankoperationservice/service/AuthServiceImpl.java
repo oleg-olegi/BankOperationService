@@ -2,6 +2,8 @@ package com.example.bankoperationservice.service;
 
 import com.example.bankoperationservice.dto.RegisterDTO;
 import com.example.bankoperationservice.exceptions.UserNotFoundException;
+import com.example.bankoperationservice.model.UserData;
+import com.example.bankoperationservice.repository.IUserRepository;
 import com.example.bankoperationservice.service.interfaces.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -24,12 +28,18 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserServiceImpl userService;
     private final PasswordEncoder encoder;
+    private final IUserRepository userRepository;
 
     @Override
     public void register(RegisterDTO registerDTO) {
         logger.info("Trying user registration");
         registerDTO.setPassword(encoder.encode(registerDTO.getPassword()));
         userService.createUser(registerDTO);
+    }
+
+    @Override
+    public UserData loadUserByUserName(String username) {
+        return userRepository.findUsersByLoginIgnoreCase(username).get();
     }
 
     @Override

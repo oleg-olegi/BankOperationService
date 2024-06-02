@@ -3,10 +3,8 @@ package com.example.bankoperationservice.service;
 
 import com.example.bankoperationservice.dto.RegisterDTO;
 import com.example.bankoperationservice.exceptions.UserIsAlreadyExistsException;
-import com.example.bankoperationservice.exceptions.UserNotFoundException;
 import com.example.bankoperationservice.mapper.ContactMapper;
 import com.example.bankoperationservice.mapper.RegisterDtoMapper;
-import com.example.bankoperationservice.model.BankAccount;
 import com.example.bankoperationservice.model.Contact;
 import com.example.bankoperationservice.model.UserData;
 import com.example.bankoperationservice.repository.IBankAccountRepository;
@@ -14,14 +12,12 @@ import com.example.bankoperationservice.repository.IContactRepository;
 import com.example.bankoperationservice.repository.IUserRepository;
 import com.example.bankoperationservice.service.interfaces.BankAccountService;
 import com.example.bankoperationservice.service.interfaces.UserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
 
 
 @Service

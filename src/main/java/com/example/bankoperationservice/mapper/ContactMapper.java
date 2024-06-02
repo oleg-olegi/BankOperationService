@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface ContactMapper {
     ContactMapper INSTANCE = Mappers.getMapper(ContactMapper.class);
 
-    @Mapping(source = "phone", target = "phones")
+//    @Mapping(source = "phone", target = "phones")
     Contact dtoToContact(RegisterDTO registerDTO);
 
     Contact dtoToContact(ContactDTO contactDTO);

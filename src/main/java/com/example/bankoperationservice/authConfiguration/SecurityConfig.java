@@ -1,6 +1,8 @@
 package com.example.bankoperationservice.authConfiguration;
 
 import com.example.bankoperationservice.authConfiguration.sucurity.UserDetailServiceImpl;
+import com.example.bankoperationservice.filter.BasicAuthCorsFilter;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +18,18 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final static Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
-    @Autowired
-    private UserDetailServiceImpl userDetailService;
+
+    private final UserDetailServiceImpl userDetailService;
+    private final BasicAuthCorsFilter filter;
     private static final String[] AUTH_WHITELIST = {
             "/v2/api-docs",
             "/swagger-resources",
@@ -60,6 +64,7 @@ public class SecurityConfig {
                         auth.requestMatchers(AUTH_WHITELIST).permitAll()
                                 .anyRequest().authenticated()
                 )
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .userDetailsService(userDetailService)
                 .authenticationManager(authenticationManager)
                 .httpBasic(withDefaults())
