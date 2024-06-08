@@ -18,6 +18,7 @@ import com.example.bankoperationservice.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,10 +67,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserInfo(UserDTO userDTO) {
-        return null;
-    }
+    public UserDTO getUserInfo(Long id, String username) {
 
+        UserData foundedUser = userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException(String.format("User with id '%s' not found", id)));
+        UserData userByUsername = userRepository.findByUserName(username).orElseThrow(() ->
+                new UserNotFoundException(String.format("User with username '%s' not found", username)));
+        if (!id.equals(userByUsername.getId())) {
+            throw new AuthorizationServiceException("You are not authorized to view this user's information.");
+        }
+        return userMapper.INSTANCE.userModelToDTO(foundedUser);
+    }
 
     @Override
     @Transactional
