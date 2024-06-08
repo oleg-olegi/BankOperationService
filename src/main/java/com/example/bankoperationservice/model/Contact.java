@@ -16,10 +16,10 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String phones;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @ManyToOne

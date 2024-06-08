@@ -18,7 +18,7 @@ public interface IUserRepository extends JpaRepository<UserData, Long> {
     List<UserData> findAllByName(String name);
 
     @Query(value = "SELECT * FROM user_data  where user_data.login like :userName", nativeQuery = true)
-    List<UserData> findByUserName(@Param("userName") String userName);
+    Optional<UserData> findByUserName(@Param("userName") String userName);
 
     boolean existsByLogin(@Param("login") String login);
 

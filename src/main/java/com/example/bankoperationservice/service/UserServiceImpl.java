@@ -2,9 +2,12 @@ package com.example.bankoperationservice.service;
 
 
 import com.example.bankoperationservice.dto.RegisterDTO;
+import com.example.bankoperationservice.dto.UserDTO;
 import com.example.bankoperationservice.exceptions.UserIsAlreadyExistsException;
+import com.example.bankoperationservice.exceptions.UserNotFoundException;
 import com.example.bankoperationservice.mapper.ContactMapper;
 import com.example.bankoperationservice.mapper.RegisterDtoMapper;
+import com.example.bankoperationservice.mapper.UserMapper;
 import com.example.bankoperationservice.model.Contact;
 import com.example.bankoperationservice.model.UserData;
 import com.example.bankoperationservice.repository.IBankAccountRepository;
@@ -16,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -30,8 +34,10 @@ public class UserServiceImpl implements UserService {
     private final RegisterDtoMapper registerDtoMapper;
     private final ContactMapper contactMapper;
     private final BankAccountService bankAccountService;
+    private final UserMapper userMapper;
 
     @Override
+    @Transactional
     public void createUser(RegisterDTO registerDTO) {
         logger.info("Trying to create and save to DB new user");
 
@@ -39,6 +45,7 @@ public class UserServiceImpl implements UserService {
 
             UserData userData = registerDtoMapper.INSTANCE.dtoToModel(registerDTO);
             Contact contact = contactMapper.INSTANCE.dtoToContact(registerDTO);
+            logger.info("ContactDTO mapped to Contact");
             contact.setUserData(userData);
 
             logger.info("DTO to Entity {}", userData.toString());
@@ -59,45 +66,47 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkUserForRegisterOk(String login) {
-        return false;
+    public UserDTO getUserInfo(UserDTO userDTO) {
+        return null;
     }
+
+
+    @Override
+    @Transactional
+    public void updateUser(Long id, UserDTO updateUserDTO) {
+        logger.info("Trying to update User");
+        if (userRepository.findById(id).isPresent()) {
+            UserData currentUserData = userRepository.findById(id).orElseThrow(
+                    () -> new UserNotFoundException(
+                            String.format("User with id '%s' not found", id))
+            );
+
+            logger.info("Data for updating {}", updateUserDTO.toString());
+            if (updateUserDTO.getName() != null) {
+                currentUserData.setName(updateUserDTO.getName());
+            }
+            if (updateUserDTO.getSurname() != null) {
+                currentUserData.setSurname(updateUserDTO.getSurname());
+            }
+            if (updateUserDTO.getDateOfBirth() != null) {
+                currentUserData.setDateOfBirth(updateUserDTO.getDateOfBirth());
+            }
+            userRepository.save(currentUserData);
+            logger.info("UserData is successfully updated");
+        }
+    }
+
+
+    @Override
+    public void deleteUser(UserDTO userDTO) {
+
+    }
+
 
     @Override
     public boolean checkUserExists(String login) {
         return userRepository.existsByLogin(login);
     }
-
-//    public void register(UserData user) {
-//
-//        Contact contact = new Contact();
-//        BankAccount bankAccount = new BankAccount();
-//
-//        user.setBankAccount(bankAccount);
-//        user.setContacts(new HashSet<>());
-//        contact.setUserData(user);
-//
-//        contact.setEmail(user.getEmail());
-//        contact.setPhones(user.getPhone());
-//        user.getContacts().add(contact);
-//
-//        bankAccount.setAccountNumber(generatePrefixedRandomAccountNumber());
-//        bankAccount.setBalance(user.getInitialBalance());
-//        bankAccount.setStartBalance(user.getInitialBalance());
-//
-//        userRepository.save(user);
-//    }
-
-//    private BankAccount createBankAccount(UserData userData) {
-//        BankAccount bankAccount = new BankAccount();
-//
-//        bankAccount.setStartBalance(userData.getInitialBalance());
-//        bankAccount.setBalance(bankAccount.getStartBalance());
-//        bankAccount.setAccountNumber(generatePrefixedRandomAccountNumber());
-//        bankAccount.setUserData(userData);
-//
-//        return bankAccount;
-//    }
 
     private boolean checkIfExistsUsername(String userName) {
         return userRepository.findByUserName(userName).isEmpty();

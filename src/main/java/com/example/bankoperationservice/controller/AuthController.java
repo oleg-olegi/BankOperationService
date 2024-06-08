@@ -62,6 +62,8 @@ public class AuthController {
         UserDetails userDetails = userDetailService.loadUserByUsername(loginRequestDTO.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
+
+// на случай авторизации по логину и паролю
 //            boolean isAuthenticated = authService.login(loginRequestDTO.getUsername(), loginRequestDTO.getPassword());
 //            if (isAuthenticated) {
 //                logger.info("User {} logged in successfully", loginRequestDTO.getUsername());

@@ -8,19 +8,22 @@ import com.example.bankoperationservice.service.interfaces.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
+@Lazy
 public class AuthServiceImpl implements AuthService {
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
@@ -28,7 +31,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserServiceImpl userService;
     private final PasswordEncoder encoder;
-    private final IUserRepository userRepository;
 
     @Override
     public void register(RegisterDTO registerDTO) {
@@ -38,18 +40,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserData loadUserByUserName(String username) {
-        return userRepository.findUsersByLoginIgnoreCase(username).get();
-    }
-
-    @Override
     @Transactional
     public boolean login(String login, String password) {
         if (password == null) {
             logger.error("Password cannot be null for login: {}", login);
             throw new IllegalArgumentException("Password cannot be null");
         }
-
         if (userService.checkUserExists(login)) {
             try {
                 logger.info("Trying to authenticate user {}", login);
@@ -59,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
                 logger.info("User {} authenticated successfully", login);
 
                 authentication = SecurityContextHolder.getContext().getAuthentication();
-                logger.info("ContextHolder {}" , authentication);
+                logger.info("ContextHolder {}", authentication);
 
                 return authentication.isAuthenticated();
             } catch (Exception e) {

@@ -73,6 +73,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        logger.info("PasswordEncoder Bean is created!!!");
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

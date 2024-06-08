@@ -18,7 +18,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         UserData user = userRepository.findUsersByLoginIgnoreCase(login)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + login));
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        String.format("User with username '%s' not found", login)));
         return SecurityUser.fromUserData(user);
     }
 }
