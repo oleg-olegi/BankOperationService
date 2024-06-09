@@ -1,13 +1,10 @@
 package com.example.bankoperationservice.repository;
 
 import com.example.bankoperationservice.model.Contact;
-import com.example.bankoperationservice.model.UserData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 

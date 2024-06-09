@@ -63,8 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserInfo(Long id, String username) {
-        UserData foundedUser = null;
-        checkIdUsernameAndAuthRules(id, foundedUser, username);
+        UserData foundedUser = checkIdUsernameAndAuthRules(id, username);
         return userMapper.INSTANCE.userModelToDTO(foundedUser);
     }
 
@@ -97,21 +96,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(Long id, String username) {
-        UserData foundedUser = null;
-        checkIdUsernameAndAuthRules(id, foundedUser, username);
-        contactRepository.deleteById(contactRepository.findByUserId(id).get().getId());
-//        bankAccountRepository.deleteById();
+        checkIdUsernameAndAuthRules(id, username);
         userRepository.deleteById(id);
     }
 
-    private void checkIdUsernameAndAuthRules(Long id, UserData foundedUser, String username) {
-        foundedUser = userRepository.findById(id).orElseThrow(() ->
+    private UserData checkIdUsernameAndAuthRules(Long id, String username) {
+        UserData foundedUser = userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException(String.format("User with id '%s' not found", id)));
         UserData userByUsername = userRepository.findByUserName(username).orElseThrow(() ->
                 new UserNotFoundException(String.format("User with username '%s' not found", username)));
         if (!id.equals(userByUsername.getId())) {
             throw new AuthorizationServiceException("You are not authorized to view this user's information.");
         }
+        return foundedUser;
     }
 
 

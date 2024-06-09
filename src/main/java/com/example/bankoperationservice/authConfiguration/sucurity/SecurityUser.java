@@ -1,7 +1,6 @@
 package com.example.bankoperationservice.authConfiguration.sucurity;
 
 import com.example.bankoperationservice.model.UserData;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

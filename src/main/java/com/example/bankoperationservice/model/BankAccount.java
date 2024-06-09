@@ -19,9 +19,6 @@ import java.math.BigDecimal;
 @ToString(exclude = {"userData"})
 @NoArgsConstructor
 public class BankAccount {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
 
     @Id
     @Column(name = "account_number")
