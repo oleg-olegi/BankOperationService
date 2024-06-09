@@ -43,19 +43,14 @@ public class UserServiceImpl implements UserService {
         logger.info("Trying to create and save to DB new user");
 
         if (checkIfExistsUsername(registerDTO.getUserName())) {
-
             UserData userData = registerDtoMapper.INSTANCE.dtoToModel(registerDTO);
             Contact contact = contactMapper.INSTANCE.dtoToContact(registerDTO);
             logger.info("ContactDTO mapped to Contact");
             contact.setUserData(userData);
-
             logger.info("DTO to Entity {}", userData.toString());
-
             userData.setDateOfBirth(registerDTO.getDateOfBirth());
             userData.setInitialBalance(BigDecimal.valueOf(generatedRandomStartedBalance()));
-
             userData.setBankAccount(bankAccountService.createBankAccount(userData));
-
             logger.info("UserData {}", userData);
             userRepository.save(userData);
             logger.info("Bank account {}", userData.getBankAccount().toString());
@@ -68,14 +63,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserInfo(Long id, String username) {
-
-        UserData foundedUser = userRepository.findById(id).orElseThrow(() ->
-                new UserNotFoundException(String.format("User with id '%s' not found", id)));
-        UserData userByUsername = userRepository.findByUserName(username).orElseThrow(() ->
-                new UserNotFoundException(String.format("User with username '%s' not found", username)));
-        if (!id.equals(userByUsername.getId())) {
-            throw new AuthorizationServiceException("You are not authorized to view this user's information.");
-        }
+        UserData foundedUser = null;
+        checkIdUsernameAndAuthRules(id, foundedUser, username);
         return userMapper.INSTANCE.userModelToDTO(foundedUser);
     }
 
@@ -106,8 +95,23 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void deleteUser(UserDTO userDTO) {
+    @Transactional
+    public void deleteUser(Long id, String username) {
+        UserData foundedUser = null;
+        checkIdUsernameAndAuthRules(id, foundedUser, username);
+        contactRepository.deleteById(contactRepository.findByUserId(id).get().getId());
+//        bankAccountRepository.deleteById();
+        userRepository.deleteById(id);
+    }
 
+    private void checkIdUsernameAndAuthRules(Long id, UserData foundedUser, String username) {
+        foundedUser = userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException(String.format("User with id '%s' not found", id)));
+        UserData userByUsername = userRepository.findByUserName(username).orElseThrow(() ->
+                new UserNotFoundException(String.format("User with username '%s' not found", username)));
+        if (!id.equals(userByUsername.getId())) {
+            throw new AuthorizationServiceException("You are not authorized to view this user's information.");
+        }
     }
 
 

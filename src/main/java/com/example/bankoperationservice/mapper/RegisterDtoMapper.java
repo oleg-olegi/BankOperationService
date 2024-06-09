@@ -14,6 +14,6 @@ public interface RegisterDtoMapper {
 
     RegisterDTO modelToDto(UserData source);
 
-//    @Mapping(source = "userName", target = "login")
+    @Mapping(source = "userName", target = "login")
     UserData dtoToModel(RegisterDTO registerDTO);
 }

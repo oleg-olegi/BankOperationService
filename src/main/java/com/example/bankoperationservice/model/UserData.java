@@ -7,9 +7,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
+
 
 
 @Entity
@@ -68,12 +67,12 @@ public class UserData {
     private Role role;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn
     private BankAccount bankAccount;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn
     private Collection<Contact> contacts;
 }

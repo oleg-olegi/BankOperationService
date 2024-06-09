@@ -27,4 +27,17 @@ CREATE TABLE user_data
     phone           TEXT
 );
 -- changeset oshinkevich:2
-ALTER TABLE user_data ADD COLUMN role TEXT;
+ALTER TABLE user_data
+    ADD COLUMN role TEXT;
+--changeset oshinkevich:3
+ALTER TABLE bank_account
+    ADD COLUMN user_data_id BIGINT;
+ALTER TABLE bank_account
+    ADD CONSTRAINT fk_user_data FOREIGN KEY (user_data_id) REFERENCES user_data (id);
+--changeset oshinkevich:4
+UPDATE bank_account ba
+SET user_data_id = (
+    SELECT u.id
+    FROM user_data u
+    WHERE u.bank_account_account_number = ba.account_number
+    );

@@ -47,4 +47,22 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You do not have permission to view this user");
         }
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            logger.info("Trying to delete user with id {} (Controller)", id);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String authUserName = authentication.getName();
+            userService.deleteUser(id, authUserName);
+            return ResponseEntity.ok().build();
+        } catch (UserNotFoundException e) {
+            logger.error("User with id '{}' not found", id, e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        } catch (AuthorizationServiceException e) {
+            logger.error("Unauthorized", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You do not have permission to view this user");
+        }
+    }
 }
+

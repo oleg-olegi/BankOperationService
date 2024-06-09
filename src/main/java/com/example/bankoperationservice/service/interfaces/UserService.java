@@ -10,7 +10,7 @@ public interface UserService {
 
     void updateUser(Long id, UserDTO updateUserDTO);
 
-    void deleteUser(UserDTO userDTO);
+    void deleteUser(Long id, String username);
 
 
     boolean checkUserExists(String login);
