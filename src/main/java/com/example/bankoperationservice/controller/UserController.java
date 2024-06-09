@@ -58,10 +58,10 @@ public class UserController {
             return ResponseEntity.ok().build();
         } catch (UserNotFoundException e) {
             logger.error("User with id '{}' not found", id, e);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
         } catch (AuthorizationServiceException e) {
             logger.error("Unauthorized", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You do not have permission to view this user");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You do not have permission to delete this user");
         }
     }
 }

@@ -18,6 +18,7 @@ import com.example.bankoperationservice.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,6 +98,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long id, String username) {
         checkIdUsernameAndAuthRules(id, username);
+        contactRepository.deleteContactsByUserId(id);
         userRepository.deleteById(id);
     }
 

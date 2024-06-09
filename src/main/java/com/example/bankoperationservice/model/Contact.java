@@ -3,7 +3,6 @@ package com.example.bankoperationservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Data
@@ -24,7 +23,6 @@ public class Contact {
 
     @ManyToOne
     @JoinColumn
-    @Cascade(CascadeType.ALL)
     private UserData userData;
 }
 

@@ -32,8 +32,7 @@ public class BankAccount {
     @Column(name = "start_balance")
     private BigDecimal startBalance;
 
-    @Cascade(CascadeType.ALL)
     @JsonIgnore
-    @OneToOne(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+    @OneToOne
     private UserData userData;
 }
