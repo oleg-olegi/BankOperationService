@@ -1,6 +1,7 @@
 package com.example.bankoperationservice.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 
@@ -16,9 +17,11 @@ public class Contact {
     private Long id;
 
     @Column(unique = true)
+    @NotNull
     private String phones;
 
     @Column(unique = true)
+    @NotNull
     private String email;
 
     @ManyToOne

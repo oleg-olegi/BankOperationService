@@ -52,6 +52,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+
     @ApiResponses(value = {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "200", description = "Successfully login")

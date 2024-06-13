@@ -5,39 +5,25 @@
 CREATE TABLE bank_account
 (
     account_number TEXT PRIMARY KEY NOT NULL,
-    balance        DOUBLE PRECISION,
-    start_balance  DOUBLE PRECISION
+    balance        DOUBLE PRECISION NOT NULL,
+    start_balance  DOUBLE PRECISION NOT NULL
 );
 
 CREATE TABLE contact
 (
-    id     BIGINT primary key,
-    phones TEXT,
-    email  TEXT
+    id     BIGSERIAL primary key NOT NULL,
+    phones TEXT                  NOT NULL,
+    email  TEXT                  NOT NULL
 );
+
+CREATE TYPE role AS ENUM ('USER');
 CREATE TABLE user_data
 (
-    id              BIGINT PRIMARY KEY,
-    full_name       TEXT,
-    login           TEXT,
-    password        TEXT,
+    id              BIGSERIAL PRIMARY KEY NOT NULL,
+    full_name       TEXT                  NOT NULL,
+    login           TEXT                  NOT NULL,
+    password        TEXT                  NOT NULL,
+    role            role,
     initial_balance DOUBLE PRECISION,
-    birth_date      TIMESTAMP,
-    email           TEXT,
-    phone           TEXT
+    birth_date      TIMESTAMP
 );
--- changeset oshinkevich:2
-ALTER TABLE user_data
-    ADD COLUMN role TEXT;
---changeset oshinkevich:3
-ALTER TABLE bank_account
-    ADD COLUMN user_data_id BIGINT;
-ALTER TABLE bank_account
-    ADD CONSTRAINT fk_user_data FOREIGN KEY (user_data_id) REFERENCES user_data (id);
---changeset oshinkevich:4
-UPDATE bank_account ba
-SET user_data_id = (
-    SELECT u.id
-    FROM user_data u
-    WHERE u.bank_account_account_number = ba.account_number
-    );

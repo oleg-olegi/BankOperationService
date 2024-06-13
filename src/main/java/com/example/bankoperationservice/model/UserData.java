@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
 
-
-
 @Entity
 @Table(name = "user_data")
 @Data
@@ -53,25 +51,14 @@ public class UserData {
     @Past(message = "Date of birth must be in the past")
     private LocalDate dateOfBirth;
 
-    @Transient
-    @Email(message = "Invalid email format")
-    @Column(unique = true)
-    private String email;
-
-    @Transient
-    @Column(unique = true)
-    private String phone;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn
     private BankAccount bankAccount;
 
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn
     private Collection<Contact> contacts;

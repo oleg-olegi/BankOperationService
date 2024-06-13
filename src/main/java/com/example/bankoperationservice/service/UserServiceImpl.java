@@ -119,8 +119,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByLogin(login);
     }
 
-    private boolean checkIfExistsUsername(String userName) {
-        return userRepository.findByUserName(userName).isEmpty();
+    private boolean checkIfExistsUsername(String username) {
+        return userRepository.existsByLogin(username);
     }
 
     private double generatedRandomStartedBalance() {
