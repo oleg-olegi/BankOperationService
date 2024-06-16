@@ -13,7 +13,7 @@ public interface IContactRepository extends JpaRepository<Contact, Long> {
     @Query("select c FROM Contact c where c.userData.id = :id")
     List<Contact> findAllByUserId(@Param("id") Long id);
 
-    @Query("select c FROM Contact c where c.userData.id = :id")
+    @Query("SELECT c FROM Contact c where c.userData.id = :id")
     Optional<Contact> findByUserId(@Param("id") Long id);
 
     @Query(value = "SELECT * FROM contact WHERE phones =:phone", nativeQuery = true)

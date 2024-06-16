@@ -1,5 +1,6 @@
 package com.example.bankoperationservice.service;
 
+import com.example.bankoperationservice.exceptions.BankAccountNotFoundException;
 import com.example.bankoperationservice.exceptions.InsufficientFundsException;
 import com.example.bankoperationservice.model.UserData;
 import com.example.bankoperationservice.repository.IBankAccountRepository;
@@ -20,21 +21,24 @@ public class TransferService {
 
     @Transactional
     public void transferMoney(String senderBankAccId, String recipientBankAccId, BigDecimal amount) {
-        Long senderId = bankRepository.findById(senderBankAccId).get().getUserData().getId();
-        Long recipientId = bankRepository.findById(recipientBankAccId).get().getUserData().getId();
 
-        UserData sender = userRepository.findById(senderId).get();
-        UserData recipient = userRepository.findById(recipientId).get();
+        UserData sender = userRepository.findByBankAccountId(senderBankAccId).orElseThrow(() -> new BankAccountNotFoundException(
+                String.format("Sender's bank account with id '%s' not found", senderBankAccId)));
 
+        UserData recipient = userRepository.findByBankAccountId(recipientBankAccId).orElseThrow(() -> new BankAccountNotFoundException(
+                String.format("Recipient's bank account with id '%s' not found", senderBankAccId)));
 
+        BigDecimal senderBalance = bankRepository.findById(sender.getBankAccount().getAccountNumber()).orElseThrow(
+                () -> new BankAccountNotFoundException(
+                        String.format("Sender's bank account with id '%s' not found", senderBankAccId))).getBalance();
 
-        BigDecimal senderBalance = userRepository.findById(senderId).get().getBankAccount().getBalance();
-        BigDecimal recipientBalance = userRepository.findById(recipientId).get().getBankAccount().getBalance();
+        BigDecimal recipientBalance = bankRepository.findById(recipient.getBankAccount().getAccountNumber()).orElseThrow(
+                () -> new BankAccountNotFoundException(
+                        String.format("Recipient's bank account with id '%s' not found", senderBankAccId))).getBalance();
         if (senderBalance.compareTo(amount) < 0) {
             throw new InsufficientFundsException("Недостаточно средств");
         }
         sender.getBankAccount().setBalance(senderBalance.subtract(amount));
-
         recipient.getBankAccount().setBalance(recipientBalance.add(amount));
     }
 }

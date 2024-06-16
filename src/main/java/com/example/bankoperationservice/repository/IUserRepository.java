@@ -12,13 +12,13 @@ import java.util.Optional;
 
 
 public interface IUserRepository extends JpaRepository<UserData, Long> {
-    @Query(value = "SELECT * FROM user_data  WHERE date_of_birth> :dateParam", nativeQuery = true)
+    @Query(value = "SELECT * FROM user_data  WHERE user_data.birth_date> :dateParam", nativeQuery = true)
     List<UserData> findAllByDate(@Param("dateParam") LocalDate dateParam);
 
-    @Query(value = "select * from user_data where name like concat(:name, '%')", nativeQuery = true)
+    @Query(value = "SELECT * FROM user_data WHERE name LIKE concat(:name, '%')", nativeQuery = true)
     List<UserData> findAllByName(String name);
 
-    @Query(value = "SELECT * FROM user_data  where user_data.login like :userName", nativeQuery = true)
+    @Query(value = "SELECT * FROM user_data  WHERE user_data.login LIKE :userName", nativeQuery = true)
     Optional<UserData> findByUserName(@Param("userName") String userName);
 
     boolean existsByLogin(@Param("login") String login);
@@ -28,4 +28,8 @@ public interface IUserRepository extends JpaRepository<UserData, Long> {
     @Modifying
     @Query("DELETE FROM UserData u WHERE u.id = :id")
     void deleteUserById(@Param("id") Long id);
+
+    @Query(value = "SELECT * FROM user_data WHERE user_data.bank_account_account_number " +
+            "LIKE :bankAccId", nativeQuery = true)
+    Optional<UserData> findByBankAccountId(@Param("bankAccId") String bankAccId);
 }

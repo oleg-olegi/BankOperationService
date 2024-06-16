@@ -42,13 +42,13 @@ public class UserServiceImpl implements UserService {
         logger.info("Trying to create and save to DB new user");
         if (!checkIfExistsUsername(registerDTO.getUserName())) {
             UserData userData = registerDtoMapper.INSTANCE.dtoToModel(registerDTO);
-            logger.info("UserData from DTO {}", userData.toString());
+            logger.info("UserData from DTO {}", userData);
 
             Contact contact = contactMapper.INSTANCE.dtoToContact(registerDTO);
             logger.info("ContactDTO mapped to Contact {}", contact);
 
             BankAccount bankAccount = bankAccountService.createBankAccount(userData);
-            logger.info("Created bankAccount {}", bankAccount.toString());
+            logger.info("Created bankAccount {}", bankAccount);
 
             userData.setDateOfBirth(registerDTO.getDateOfBirth());
             userData.setInitialBalance(BigDecimal.valueOf(generatedRandomStartedBalance()));
@@ -64,12 +64,9 @@ public class UserServiceImpl implements UserService {
             contact.setEmail(contact.getEmail());
             contact.setUserData(userData);
             contactRepository.save(contact);
-            logger.info("Контакт успешно сохранен в БД");
-
-            logger.info("UserData {}", userData);
-            logger.info("Bank account {}", bankAccount);
-            logger.info("Contact {}", contact);
+            logger.info("Contact successfully saved to DB");
             userRepository.save(userData);
+            logger.info("UserData successfully saved to DB");
         } else {
             throw new UserIsAlreadyExistsException("UserName is busy");
         }
@@ -85,25 +82,22 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(Long id, UserDTO updateUserDTO) {
         logger.info("Trying to update User");
-        if (userRepository.findById(id).isPresent()) {
-            UserData currentUserData = userRepository.findById(id).orElseThrow(
-                    () -> new UserNotFoundException(
-                            String.format("User with id '%s' not found", id))
-            );
-
-            logger.info("Data for updating {}", updateUserDTO.toString());
-            if (updateUserDTO.getName() != null) {
-                currentUserData.setName(updateUserDTO.getName());
-            }
-            if (updateUserDTO.getSurname() != null) {
-                currentUserData.setSurname(updateUserDTO.getSurname());
-            }
-            if (updateUserDTO.getDateOfBirth() != null) {
-                currentUserData.setDateOfBirth(updateUserDTO.getDateOfBirth());
-            }
-            userRepository.save(currentUserData);
-            logger.info("UserData is successfully updated");
+        UserData currentUserData = userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException(
+                        String.format("User with id '%s' not found", id))
+        );
+        logger.info("Data for updating {}", updateUserDTO);
+        if (updateUserDTO.getName() != null) {
+            currentUserData.setName(updateUserDTO.getName());
         }
+        if (updateUserDTO.getSurname() != null) {
+            currentUserData.setSurname(updateUserDTO.getSurname());
+        }
+        if (updateUserDTO.getDateOfBirth() != null) {
+            currentUserData.setDateOfBirth(updateUserDTO.getDateOfBirth());
+        }
+        userRepository.save(currentUserData);
+        logger.info("UserData is successfully updated");
     }
 
 
