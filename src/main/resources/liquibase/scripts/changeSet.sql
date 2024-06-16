@@ -17,13 +17,26 @@ CREATE TABLE contact
 );
 
 CREATE TYPE role AS ENUM ('USER');
+
+
 CREATE TABLE user_data
 (
     id              BIGSERIAL PRIMARY KEY NOT NULL,
-    full_name       TEXT                  NOT NULL,
+    name            TEXT                  NOT NULL,
+    surname         TEXT                  NOT NULL,
     login           TEXT                  NOT NULL,
     password        TEXT                  NOT NULL,
-    role            role,
+    role            role                  NOT NULL,
     initial_balance DOUBLE PRECISION,
     birth_date      TIMESTAMP
 );
+
+CREATE FUNCTION enum_role_from_str(text)
+    RETURNS role
+AS
+'select $1::varchar::role'
+    LANGUAGE SQL IMMUTABLE;
+
+CREATE CAST (text AS role)
+    WITH FUNCTION enum_role_from_str(text)
+    AS IMPLICIT;

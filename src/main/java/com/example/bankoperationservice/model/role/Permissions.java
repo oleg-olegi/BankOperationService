@@ -1,4 +1,4 @@
-package com.example.bankoperationservice.model;
+package com.example.bankoperationservice.model.role;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

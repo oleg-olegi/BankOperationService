@@ -3,7 +3,6 @@ package com.example.bankoperationservice.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 
 @Entity
 @Data

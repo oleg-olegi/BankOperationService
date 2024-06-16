@@ -26,7 +26,7 @@ public class BalanceIncreaseScheduler {
             bankAccountRepository.balanceLessThenLimit().forEach(bankAccount -> {
                 logger.info("Попытка увеличить баланс для аккаунта {}", bankAccount.getAccountNumber());
                 if (bankAccount.getBalance().compareTo(bankAccount.getStartBalance()
-                        .multiply(BigDecimal.valueOf(2.07))) >= 0) {
+                        .multiply(BigDecimal.valueOf(2.07))) <= 0) {
                     BigDecimal currentBalance = bankAccount.getBalance();
                     BigDecimal increaseAmount = currentBalance.multiply(BigDecimal.valueOf(0.05));
                     BigDecimal newBalance = currentBalance.add(increaseAmount);

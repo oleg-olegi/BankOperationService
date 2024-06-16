@@ -1,4 +1,4 @@
-package com.example.bankoperationservice.model;
+package com.example.bankoperationservice.model.role;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.bankoperationservice.model.Permissions.BASIC_USER_ACCESS;
+import static com.example.bankoperationservice.model.role.Permissions.BASIC_USER_ACCESS;
 
 @Getter
 @RequiredArgsConstructor

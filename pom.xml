@@ -88,6 +88,22 @@
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.5.2.Final</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-63</artifactId>
+            <version>3.7.6</version>
+        </dependency>
+
+
     </dependencies>
     <build>
         <plugins>
@@ -106,7 +122,7 @@
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>1.6.0.Beta2</version>
+                            <version>1.5.3.Final</version>
                         </path>
                         <path>
                             <groupId>org.projectlombok</groupId>

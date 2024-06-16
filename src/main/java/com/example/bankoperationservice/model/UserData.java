@@ -1,18 +1,22 @@
 package com.example.bankoperationservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.bankoperationservice.model.role.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collection;
 
 @Entity
 @Table(name = "user_data")
 @Data
-@ToString(exclude = {"contacts"})
+//@ToString(exclude = {"contacts"})
 @NoArgsConstructor
 public class UserData {
 
@@ -46,20 +50,17 @@ public class UserData {
     @DecimalMin(value = "0.00", inclusive = false, message = "Initial balance must be greater than 0")
     private BigDecimal initialBalance;
 
-    @Column(nullable = false)
+    @Column(name = "birth_date", nullable = false)
     @NotNull(message = "Date of birth cannot be null")
     @Past(message = "Date of birth must be in the past")
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, columnDefinition = "role")
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private BankAccount bankAccount;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn
-    private Collection<Contact> contacts;
 }

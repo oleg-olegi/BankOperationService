@@ -8,6 +8,7 @@ import com.example.bankoperationservice.exceptions.UserNotFoundException;
 import com.example.bankoperationservice.mapper.ContactMapper;
 import com.example.bankoperationservice.mapper.RegisterDtoMapper;
 import com.example.bankoperationservice.mapper.UserMapper;
+import com.example.bankoperationservice.model.BankAccount;
 import com.example.bankoperationservice.model.Contact;
 import com.example.bankoperationservice.model.UserData;
 import com.example.bankoperationservice.repository.IBankAccountRepository;
@@ -42,21 +43,36 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void createUser(RegisterDTO registerDTO) {
         logger.info("Trying to create and save to DB new user");
-
-        if (checkIfExistsUsername(registerDTO.getUserName())) {
+        if (!checkIfExistsUsername(registerDTO.getUserName())) {
             UserData userData = registerDtoMapper.INSTANCE.dtoToModel(registerDTO);
+            logger.info("UserData from DTO {}", userData.toString());
+
             Contact contact = contactMapper.INSTANCE.dtoToContact(registerDTO);
-            logger.info("ContactDTO mapped to Contact");
-            contact.setUserData(userData);
-            logger.info("DTO to Entity {}", userData.toString());
+            logger.info("ContactDTO mapped to Contact {}", contact);
+
+            BankAccount bankAccount = bankAccountService.createBankAccount(userData);
+            logger.info("Created bankAccount {}", bankAccount.toString());
+
             userData.setDateOfBirth(registerDTO.getDateOfBirth());
             userData.setInitialBalance(BigDecimal.valueOf(generatedRandomStartedBalance()));
-            userData.setBankAccount(bankAccountService.createBankAccount(userData));
-            logger.info("UserData {}", userData);
-            userRepository.save(userData);
-            logger.info("Bank account {}", userData.getBankAccount().toString());
-            bankAccountRepository.save(userData.getBankAccount());
+            userData.setBankAccount(bankAccount);
+
+            userData.setRole(registerDTO.getRole());
+
+            bankAccount.setStartBalance(userData.getInitialBalance());
+            bankAccount.setBalance(bankAccount.getStartBalance());
+            bankAccount.setUserData(userData);
+
+            contact.setPhones(contact.getPhones());
+            contact.setEmail(contact.getEmail());
+            contact.setUserData(userData);
             contactRepository.save(contact);
+            logger.info("Контакт успешно сохранен в БД");
+
+            logger.info("UserData {}", userData);
+            logger.info("Bank account {}", bankAccount);
+            logger.info("Contact {}", contact);
+            userRepository.save(userData);
         } else {
             throw new UserIsAlreadyExistsException("UserName is busy");
         }

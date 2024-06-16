@@ -1,6 +1,6 @@
 package com.example.bankoperationservice.dto;
 
-import com.example.bankoperationservice.model.Role;
+import com.example.bankoperationservice.model.role.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;

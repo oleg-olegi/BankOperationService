@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import java.math.BigDecimal;
 
@@ -33,6 +32,6 @@ public class BankAccount {
     private BigDecimal startBalance;
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private UserData userData;
 }
